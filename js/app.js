@@ -1,6 +1,21 @@
 ﻿const $ = (s) => document.querySelector(s);
 const $$ = (s) => document.querySelectorAll(s);
-const API_BASE = 'http://localhost:3000/api';
+
+const getApiBase = () => {
+  const fromWindow = window.location.origin;
+  const isLocalhost = /localhost|127\.0\.0\.1/.test(fromWindow);
+
+  if (!isLocalhost) {
+    return `${fromWindow.replace(/\/$/, '')}/api`;
+  }
+
+  const fromEnv = (window.__APP_API_BASE__ || '').trim();
+  if (fromEnv) return fromEnv.replace(/\/$/, '');
+
+  return 'http://localhost:3000/api';
+};
+
+const API_BASE = getApiBase();
 
 const defaultDB = {
   courses: [
