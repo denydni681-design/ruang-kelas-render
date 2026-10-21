@@ -10,9 +10,12 @@ const { generateVerificationCode, sendResetCodeEmail } = require('./utils/passwo
 require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = Number(process.env.PORT || 3000);
 
-app.use(cors());
+app.use(cors({
+  origin: true,
+  credentials: true,
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
@@ -1028,7 +1031,8 @@ app.get('*', (req, res) => {
 (async () => {
   await ensureApprovedColumn().catch(() => {});
   await ensureSubmissionTable().catch(() => {});
-  app.listen(PORT, () => {
-    console.log(`Server MySQL aktif di http://localhost:${PORT}`);
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server MySQL aktif di http://0.0.0.0:${PORT}`);
+    console.log(`Public URL tersedia lewat Render / domain Anda pada port ${PORT}`);
   });
 })();
